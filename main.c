@@ -59,17 +59,16 @@ ISR(TIM0_COMPA_vect)
 /* ------------------------------------------------------------ */
 static void timer0_init(void)
 {
-    /* CTC mode (WGM01 = 1) */
-    TCCR0A = (1 << WGM01);
+    /* CTC mode */
+    TCCR0A = _BV(WGM01);
 
-    /* clk/256 prescaler: 9.6 MHz / 256 ≈ 37.5 kHz, period = 26.67 µs
-       OCR0A = 375-1 ⇒ 375 * 26.67 µs ≈ 10 ms per interrupt */
-    OCR0A = 375 - 1;
-    TCCR0B = (1 << CS02); /* start timer, prescaler 256   */
+    OCR0A = 93; /* 94 ticks → 10 ms           */
 
-    TIMSK0 = (1 << OCIE0A); /* enable compare-match IRQ     */
+    /* clk / 1024 prescaler (CS02 | CS00) */
+    TCCR0B = _BV(CS02) | _BV(CS00);
+
+    TIMSK0 = _BV(OCIE0A); /* enable compare–match IRQ   */
 }
-
 /* ------------------------------------------------------------ */
 int main(void)
 {
