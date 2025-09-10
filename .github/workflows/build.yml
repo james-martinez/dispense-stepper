@@ -20,7 +20,7 @@ jobs:
   # 3 – compile your C file
   - name: Compile
     run: |
-      avr-gcc -mmcu=attiny13a -Os -o stepper.elf main3.c
+      avr-gcc -mmcu=attiny13a -Os -o stepper.elf main.c
       avr-objcopy -O ihex -R .eeprom stepper.elf stepper.hex
  
   # 4 – attach the results to the run
