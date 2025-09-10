@@ -9,7 +9,7 @@ jobs:
 
   steps:
   # 1 – check out your repository
-  - uses: actions/checkout@v3
+  - uses: actions/checkout@v5
 
  # 2 – install the AVR tool-chain
   - name: Install AVR GCC
