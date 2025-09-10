@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1  check out your repository
+      - uses: actions/checkout@v5
+      # 2  install the AVR tool-chain
+      - name: Install Build tools
+        run: |
+          sudo apt-get update
+          sudo apt install -y cmake python3 build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+      # 3  compile your C file
+      - name: Compile
+        run: |
+          cmake -S . -B build 
+      # 4  run a short simulation
+      - name: Simulate firmware
+        run: |
+          # simavr  -m attiny13 -f 9600000   stepper.elf
+      # 5  attach the results to the run
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stepper-sim
+          path: |
+            stepper.hex
+            stepper.elf
