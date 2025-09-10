@@ -15,7 +15,7 @@ jobs:
   - name: Install AVR GCC
     run: |
       sudo apt-get update
-      sudo apt-get install -y gcc-avr binutils-avr avr-libc
+      sudo apt-get install -y gcc-avr binutils-avr avr-libc simavr
  
   # 3 – compile your C file
   - name: Compile
@@ -23,11 +23,25 @@ jobs:
       avr-gcc -mmcu=attiny13a -Os -o stepper.elf main.c
       avr-objcopy -O ihex -R .eeprom stepper.elf stepper.hex
  
-  # 4 – attach the results to the run
-  - name: Upload firmware
+  # 4 – run a short simulation
+  - name: Simulate firmware with simavr
+    run: |
+      # Run for ~100 ms of AVR time, dump UART/stdout, and generate VCD
+      simavr \
+        -m attiny13 \
+        -f 9600000 \                    # CPU frequency (adjust if you use a different F_CPU)
+        -vcd vcd                        # write waveforms to vcd/attiny13.vcd
+        -t 0.100                        # stop after 0.1 s of simulated time
+        stepper.elf                     # firmware image \
+        | tee simavr.log                # capture console output
+  
+  # 5 – attach the results to the run
+  - name: Upload artifacts
     uses: actions/upload-artifact@v4
     with:
-      name: stepper-firmware
+      name: stepper-sim
       path: |
         stepper.hex
         stepper.elf
+        simavr.log
+        vcd/
