@@ -1,31 +1,33 @@
 on: 
  push: 
   branches: 
-    - main
+    - master
 
-jobs: build: runs-on: ubuntu-latest
+jobs: 
+ build: 
+  runs-on: ubuntu-latest
 
-steps:
-# 1 – check out your repository
-- uses: actions/checkout@v3
+  steps:
+  # 1 – check out your repository
+  - uses: actions/checkout@v3
 
-# 2 – install the AVR tool-chain
-- name: Install AVR GCC
-  run: |
-    sudo apt-get update
-    sudo apt-get install -y gcc-avr binutils-avr avr-libc
-
-# 3 – compile your C file
-- name: Compile
-  run: |
-    avr-gcc -mmcu=attiny13a -Os -o stepper.elf stepper_t13.c
-    avr-objcopy -O ihex -R .eeprom stepper.elf stepper.hex
-
-# 4 – attach the results to the run
-- name: Upload firmware
-  uses: actions/upload-artifact@v3
-  with:
-    name: stepper-firmware
-    path: |
-      stepper.hex
-      stepper.elf
+ # 2 – install the AVR tool-chain
+  - name: Install AVR GCC
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y gcc-avr binutils-avr avr-libc
+ 
+  # 3 – compile your C file
+  - name: Compile
+    run: |
+      avr-gcc -mmcu=attiny13a -Os -o stepper.elf stepper_t13.c
+      avr-objcopy -O ihex -R .eeprom stepper.elf stepper.hex
+ 
+  # 4 – attach the results to the run
+  - name: Upload firmware
+    uses: actions/upload-artifact@v3
+    with:
+      name: stepper-firmware
+      path: |
+        stepper.hex
+        stepper.elf
