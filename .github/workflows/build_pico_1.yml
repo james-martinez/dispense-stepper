@@ -16,7 +16,7 @@ jobs:
       # 3  compile your C file
       - name: Compile
         run: |
-          cmake -S . -B build 
+         # cmake -S . -B build 
       # 4  run a short simulation
       - name: Simulate firmware
         run: |
@@ -25,7 +25,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: stepper-sim
+          name: stepper
           path: |
             stepper.hex
             stepper.elf

@@ -19,16 +19,14 @@ jobs:
           avr-gcc -mmcu=attiny13a -Os -o stepper.elf main.c
           avr-objcopy -O ihex -R .eeprom stepper.elf stepper.hex
       # 4  run a short simulation
-      - name: Simulate firmware with simavr
+      - name: Simulate firmware
         run: |
           # simavr  -m attiny13 -f 9600000   stepper.elf
       # 5  attach the results to the run
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: stepper-sim
+          name: stepper
           path: |
             stepper.hex
             stepper.elf
-            simavr.log
-            vcd/
